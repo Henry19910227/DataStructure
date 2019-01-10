@@ -22,11 +22,9 @@ class ViewController: UIViewController {
         linkedList.append(value: 40)
         linkedList.append(value: 50)
         
-        print("最後一個節點值為 \(linkedList.last?.value ?? 0)")
-        print("共有 \(linkedList.count) 個節點")
-        print("\(linkedList.nodeAt(6)?.value ?? 0)")
-        print(linkedList[8])
+        linkedList.removeAt(0)
         
+        linkedList.showAll()
     }
 
 

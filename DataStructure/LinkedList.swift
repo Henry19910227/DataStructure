@@ -44,8 +44,12 @@ class LinkedList<T> {
     public var isEmpty: Bool? {
         return head == nil
     }
+}
+
+//MARK: - Public
+extension LinkedList {
     
-    /// 加入Node
+    /// 加入節點
     public func append(value: T) {
         
         let node = Node(value: value)
@@ -57,6 +61,7 @@ class LinkedList<T> {
         }
     }
     
+    /// 取出某個節點的值
     public func nodeAt(_ index: UInt) -> Node? {
         
         guard count > 0 && (count - 1) >= index else {
@@ -75,8 +80,48 @@ class LinkedList<T> {
         return node
     }
     
+    /// 插入節點
     public func insert(value: T, index: UInt) {
         
+        let (previousNode, nextNode) = nodeBeforeAndAfter(index: index)
+        
+        let node = Node(value: value)
+        node.previous = previousNode
+        node.next = nextNode
+        
+        nextNode?.previous = node
+        
+        guard let prevNode = previousNode else {
+            head = node
+            return
+        }
+        prevNode.next = node
+        
+    }
+    
+    /// 刪除某個節點
+    @discardableResult
+    public func removeAt(_ index: UInt) -> T? {
+        
+        guard let node = nodeAt(index) else {
+            return nil
+        }
+        
+        return remove(node: node)
+    }
+    
+    /// 展示全部節點
+    public func showAll() {
+        
+        guard var node = head else {
+            return
+        }
+        
+        print(node.value)
+        while case let next? = node.next {
+            print(next.value)
+            node = next
+        }
     }
     
     public subscript(index: UInt) -> T {
@@ -84,6 +129,9 @@ class LinkedList<T> {
         assert(node != nil)
         return node!.value
     }
+}
+
+extension LinkedList {
     
     private func nodeBeforeAndAfter(index: UInt) -> (Node?, Node?) {
         
@@ -91,13 +139,31 @@ class LinkedList<T> {
         
         var previousNode: Node?
         var nextNode = head
+        
         for _ in 0..<index {
-            
             previousNode = nextNode
             nextNode = nextNode?.next
         }
-    
+        
         return (previousNode, nextNode)
+    }
+    
+    private func remove(node: Node) -> T {
+        
+        let previousNode = node.previous
+        let nextNode = node.next
+        
+        previousNode?.next = nextNode
+        nextNode?.previous = previousNode
+        
+        node.previous = nil
+        node.next = nil
+        
+        if previousNode == nil {
+            head = nextNode
+        }
+        
+        return node.value
     }
 }
 
